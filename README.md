@@ -11,14 +11,15 @@ npm install --save distrugree
 ```javascript
 import distrugree from 'distrugree';
 
-const createNode = (port) =>
-  distrugree({
-    host: '0.0.0.0',
-    port
-  });
+const node1 = distrugree({
+  host: '0.0.0.0',
+  port: 8050
+})
 
-const node1 = createNode('8050')
-const node2 = createNode('8051')
+const node2 = distrugree({
+  host: '0.0.0.0',
+  port: 8051
+})
 
 node1.join('localhost:8051');
 node2.join('localhost:8050');
