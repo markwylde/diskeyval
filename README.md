@@ -9,20 +9,40 @@ npm install --save distrugree
 > This is a work in progress. It doesn't work just yet.
 
 ```javascript
-import createDistrugree from 'distrugree';
+import distrugree from 'distrugree';
 
-const distrugree = createDistrugree({
-  host: '0.0.0.0',
-  port: '8050'
-});
+function createNode (port) {
+  const node = distrugree({
+    host: '0.0.0.0',
+    port
+  });
 
-distrugree.join('localhost:8053');
+  node.on('SET', (key, value, reply) => {
+    node.mergeState({
+      [key]: value
+    });
 
-await distrugree.sendToLeader('SET', 'testkey', 'testvalue') === ['SUCCESS'];
+    reply('SUCCESS');
+  });
 
-await distrugree.sendToRandom('GET', 'testkey') === ['SUCCESS', 'testvalue'];
+  node.on('GET', (key, value, reply) => {
+    reply('SUCCESS', node.state[key]);
+  });
 
-await distrugree.sendToAll('GET', 'testkey') === [
+  return node;
+}
+
+const node1 = createNode('8050')
+const node2 = createNode('8051')
+
+node1.join('localhost:8051');
+node2.join('localhost:8050');
+
+await node1.sendToLeader('SET', 'testkey', 'testvalue') === ['SUCCESS'];
+
+await node1.sendToRandom('GET', 'testkey') === ['SUCCESS', 'testvalue'];
+
+await node1.sendToAll('GET', 'testkey') === [
   ['SUCCESS', 'testvalue'],
   ['SUCCESS', 'testvalue'],
   ['SUCCESS', 'testvalue']
