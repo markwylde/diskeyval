@@ -17,9 +17,9 @@ function createNode (port) {
     port,
 
     actions: {
-      SET: (key, value, response) => {
+      SET: ({ reply, forwardToLeader }, key, value) => {
         if (!node.isLeader) {
-          response.forwardToLeader();
+          forwardToLeader();
           return;
         }
 
@@ -27,11 +27,11 @@ function createNode (port) {
           [key]: value
         });
 
-        response.send('SUCCESS');
+        reply('SUCCESS');
       },
 
-      GET: (key, value, response) => {
-        response.send('SUCCESS', node.state[key]);
+      GET: ({ reply }, key, value) => {
+        reply('SUCCESS', node.state[key]);
       }
     }
   });
