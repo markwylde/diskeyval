@@ -1,0 +1,24 @@
+{
+  "name": "distrugree",
+  "version": "1.0.0",
+  "type": "module",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "c8 node test"
+  },
+  "keywords": [],
+  "author": {
+    "email": "me@markwylde.com",
+    "name": "Mark Wylde",
+    "url": "https://github.com/markwylde"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "basictap": "^3.4.3",
+    "c8": "^7.12.0"
+  },
+  "dependencies": {
+    "@markwylde/liferaft": "^1.3.1"
+  }
+}
