@@ -17,6 +17,10 @@ function createNode (port) {
     port,
 
     actions: {
+      HELLO: ({ reply }, name => {
+        reply('SUCCESS', `Hi ${name}`);
+      }),
+
       SET: ({ reply, forwardToLeader }, key, value) => {
         if (!node.isLeader) {
           forwardToLeader();
@@ -29,10 +33,6 @@ function createNode (port) {
 
         reply('SUCCESS');
       },
-
-      GET: ({ reply }, key, value) => {
-        reply('SUCCESS', node.state[key]);
-      }
     }
   });
 
@@ -45,14 +45,17 @@ const node2 = createNode('8051')
 node1.join('localhost:8051');
 node2.join('localhost:8050');
 
-await node1.sendToLeader('SET', 'testkey', 'testvalue') === ['SUCCESS'];
+await node1.sendToLeader('SET', 'testkey', 'testvalue1') === ['SUCCESS'];
+console.log(node1.state.testkey) === 'testvalue1';
 
-await node1.sendToRandom('GET', 'testkey') === ['SUCCESS', 'testvalue'];
+await node1.sendToRandom('SET', 'testkey', 'testvalue2') === ['SUCCESS'];
+console.log(node1.state.testkey) === 'testvalue2';
 
-await node1.sendToAll('GET', 'testkey') === [
-  ['SUCCESS', 'testvalue'],
-  ['SUCCESS', 'testvalue'],
-  ['SUCCESS', 'testvalue']
+await node1.sendToRandom('HELLO', 'Mark') === ['SUCCESS', 'Hi Mark'];
+
+await node1.sendToAll('HELLO', 'Mark') === [
+  ['SUCCESS', 'Hi Mark'],
+  ['SUCCESS', 'Hi Mark']
 ];
 
 distrugree.end();
