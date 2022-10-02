@@ -13,14 +13,10 @@ import createDistrugree from 'distrugree';
 
 const distrugree = createDistrugree({
   host: '0.0.0.0',
-  port: '8050',
-  nodes: [
-    'localhost:8051',
-    'localhost:8052'
-  ]
+  port: '8050'
 });
 
-distrugree.nodes.add('localhost:8053');
+distrugree.join('localhost:8053');
 
 await distrugree.sendToLeader('SET', 'testkey', 'testvalue') === ['SUCCESS'];
 
@@ -31,4 +27,6 @@ await distrugree.sendToAll('GET', 'testkey') === [
   ['SUCCESS', 'testvalue'],
   ['SUCCESS', 'testvalue']
 ];
+
+distrugree.end();
 ```
