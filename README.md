@@ -17,7 +17,7 @@ function createNode (port) {
     port,
 
     actions: {
-      HELLO: ({ reply }, name => {
+      HELLO: ({ reply }, name) => {
         reply('SUCCESS', `Hi ${name}`);
       }),
 
