@@ -14,19 +14,26 @@ import distrugree from 'distrugree';
 function createNode (port) {
   const node = distrugree({
     host: '0.0.0.0',
-    port
-  });
+    port,
 
-  node.on('SET', (key, value, reply) => {
-    node.mergeState({
-      [key]: value
-    });
+    actions: {
+      SET: (key, value, response) => {
+        if (!node.isLeader) {
+          response.forwardToLeader();
+          return;
+        }
 
-    reply('SUCCESS');
-  });
+        node.mergeState({
+          [key]: value
+        });
 
-  node.on('GET', (key, value, reply) => {
-    reply('SUCCESS', node.state[key]);
+        response.send('SUCCESS');
+      },
+
+      GET: (key, value, response) => {
+        response.send('SUCCESS', node.state[key]);
+      }
+    }
   });
 
   return node;
