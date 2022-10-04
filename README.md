@@ -18,6 +18,9 @@ node1.join('localhost:8051');
 node2.join('localhost:8050');
 
 await node1.set('testkey', 'testvalue1');
+await node1.get('testkey');
+
+// Query the local node's state
 node1.state.testkey === 'testvalue1';
 node2.state.testkey === 'testvalue1';
 
