@@ -1,0 +1,12 @@
+[req]
+prompt = no
+distinguished_name = dn
+req_extensions = req_ext
+
+[dn]
+CN = node-6002
+
+[req_ext]
+subjectAltName = DNS:node-6002,URI:spiffe://diskeyval/node-6002
+extendedKeyUsage = serverAuth,clientAuth
+keyUsage = digitalSignature,keyEncipherment
